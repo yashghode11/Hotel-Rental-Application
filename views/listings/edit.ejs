@@ -1,0 +1,65 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <body>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <br>
+                <h3>EDIT DETAILS</h3>
+                <form method="POST" action="/listings/<%=elist._id%>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input name="listing[title]" type="text" class="form-control" value="<%=elist.title%>" required>
+                        <div class="invalid-feedback">Needs a Catchy Title here</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="listing[description]" class="form-control" required><%=elist.description%></textarea>
+                        <div class="invalid-feedback">Needs Some descrition here</div>
+                    </div>
+
+                    <div class="mb-3">
+                        current uploaded Image 
+                        <br>
+                        <img class="previewImg" src="<%=elist.image.url %>" alt="listing_img">
+                        
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload New Image</label>
+                        <input name="listing[image][url]" type="file" class="form-control" >
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="price" class="form-label">Price</label>
+                            <input name="listing[price]" type="number" class="form-control" value="<%=elist.price%>" required>
+                            <div class="invalid-feedback">Please enter a valid Price here</div>
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label for="country" class="form-label">Country</label>
+                            <input name="listing[country]" type="text" class="form-control" value="<%=elist.country%>"required>
+                            <div class="invalid-feedback">Please enter a valid Country here</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input name="listing[location]" type="text" class="form-control" value="<%=elist.location%>"required>
+                        <div class="invalid-feedback">Please enter a valid location here</div>
+                    </div>
+
+                    <button class="btn dark-btn add-btn mt-3">Update list</button>
+                    <br><br>
+
+
+                </form>
+
+               
+<br>
+<br>
+            </div>
+        </div>
+    </body>

@@ -1,0 +1,208 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<script>
+    const mapToken= "<%= process.env.MAP_TOKEN %>";
+    const places="<%=list.location %>";
+</script>
+    <body>
+        <div class="row mt-3">
+            <div class="col-10 offset-2">
+                <h3><big>
+                        <%=list.title%>
+                    </big></h3>
+                <br>
+                <div class="listing-card col-9 ">
+                    <img src="<%= list.image.url%>" class="card-img-top show-img" alt="listing_img">
+                    <br>
+                    <div class="card-body">
+                        <p class="card-text">
+                        <h4><i><b>Owned By <%= list.owner.username %></b></i></h4>
+
+                        <%=list.description %>
+                            <br>
+                            &#8377 <%=list.price.toLocaleString("en-IN") %>
+                                <br>
+                                <%=list.location %>
+                                    <br>
+                                    <%=list.country %>
+                                        <br>
+                                        <br>
+                                        </p>
+                                        <% if(currUser && list.owner._id.equals(currUser._id)) { %>
+                                            <div class="btns">
+
+                                                <a href="/listings/<%=list._id %>/edit"
+                                                    class="btn dark-btn add-btn ">Edit</a>
+                                                <!-- delete wala button -->
+                                                <form method="POST" action="/listings/<%=list._id%>?_method=DELETE">
+                                                    <button class="btn btn-dark offset-2">DELETE</button>
+                                                </form>
+
+                                            </div>
+                                            <% } %>
+
+
+                    </div>
+                </div>
+
+                <div class="listing-card col-9">
+
+
+
+
+                    <% if(currUser) { %>
+                        <h4>Leave a Review</h4>
+                        <br>
+                        <form action="/listings/<%=list._id %>/reviews" method="POST" class="needs-validation">
+                            <label for="rating" class="form-label">Rating</label>
+
+                            <fieldset class="starability-slot">
+
+                                <input type="radio" id="no-rate" class="input-no-rate" name="reviews[rating]" value="1"
+                                    checked aria-label="No rating." />
+                                <input type="radio" id="first-rate1" name="reviews[rating]" value="1" />
+                                <label for="first-rate1" title="Terrible">1 star</label>
+                                <input type="radio" id="first-rate2" name="reviews[rating]" value="2" />
+                                <label for="first-rate2" title="Not good">2 stars</label>
+                                <input type="radio" id="first-rate3" name="reviews[rating]" value="3" />
+                                <label for="first-rate3" title="Average">3 stars</label>
+                                <input type="radio" id="first-rate4" name="reviews[rating]" value="4" />
+                                <label for="first-rate4" title="Very good">4 stars</label>
+                                <input type="radio" id="first-rate5" name="reviews[rating]" value="5" />
+                                <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
+                            <hr>
+
+                            <div class="mb-1 mt-3">
+                                <label for="comment" class="form-label">Comment</label>
+                                <textarea name="[reviews][comment]" id="comment" cols="30" rows="5" class="form-control"
+                                    required></textarea>
+                                <div class="valid-feedback">The feedback is Awesome</div>
+                                <div class="invalid-feedback">Please Enter Valid Comment</div>
+                            </div>
+                            <div class="mb-4 mt-3">
+                                <button class="btn btn-dark add-btn">Submit</button>
+                            </div>
+                        </form>
+                        <hr>
+
+                        <% } %>
+                </div>
+
+
+
+                <div>
+
+                    <% if(list.reviews.length>0){ %>
+
+                        <h4>All Reviews</h4>
+                        <div class="row mt-3  m-2 col-10">
+                            <% for(review of list.reviews){ %>
+                                <div class=" card col-5 ms-3 mb-3 ">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-1">@<%=review.author.username %>
+                                        </h5>
+                                        <p class="starability-result" data-rating="<%= review.rating %>">
+                                            Rated: 3 stars
+                                        </p>
+                                        <p class="card-text">
+                                            <%= review.comment%>
+                                        </p>
+
+                                    </div>
+                                    <form method="POST"
+                                        action="/listings/<%=list._id%>/reviews/<%=review._id%>?_method=DELETE"
+                                        class=" mb-3 mt-1">
+                                        <button class="btn btn-sm btn-dark">Delete</button>
+                                    </form>
+
+                                </div>
+                            <% } %>
+
+                    <% } %>
+                </div>
+
+
+                    <div class="listing-card col-9">
+                            <div>
+                                <h3>Where you w'll be</h3>
+                                <div id="map"></div>
+                                <div class="lang-switcher">
+            <label for="lang">Language:</label>
+            <select name="lang" id="lang-options">
+                <option value='am'>Amharic</option>
+                <option value='ar'>Arabic</option>
+                <option value='bg'>Bulgarian</option>
+                <option value='br'>Breton</option>
+                <option value='bs'>Bosnian</option>
+                <option value='ca'>Catalan</option>
+                <option value='co'>Corsican</option>
+                <option value='cs'>Czech</option>
+                <option value='cy'>Welsh</option>
+                <option value='da'>Danish</option>
+                <option value='de' >German</option>
+                <option value='el'>Greek</option>
+                <option value='en'selected>English</option>
+                <option value='eo'>Esperanto</option>
+                <option value='es'>Spanish</option>
+                <option value='et'>Estonian</option>
+                <option value='eu'>Basque</option>
+                <option value='fi'>Finnish</option>
+                <option value='fr'>French</option>
+                <option value='fy'>Western Frisian</option>
+                <option value='ga'>Irish</option>
+                <option value='gd'>Scottish Gaelic</option>
+                <option value='he'>Hebrew</option>
+                <option value='hr'>Croatian</option>
+                <option value='hu'>Hungarian</option>
+                <option value='hy'>Armenian</option>
+                <option value='id'>Indonesian</option>
+                <option value='is'>Icelandic</option>
+                <option value='it'>Italian</option>
+                <option value='ja'>Japanese</option>
+                <option value='ka'>Georgian</option>
+                <option value='kk'>Kazakh</option>
+                <option value='kn'>Kannada</option>
+                <option value='ko'>Korean</option>
+                <option value='ku'>Kurdish</option>
+                <option value='la'>Latin</option>
+                <option value='lt'>Lithuanian</option>
+                <option value='lv'>Latvian</option>
+                <option value='mk'>Macedonian</option>
+                <option value='mt'>Maltese</option>
+                <option value='nl'>Dutch</option>
+                <option value='no'>Norwegian</option>
+                <option value='pl'>Polish</option>
+                <option value='pt'>Portuguese</option>
+                <option value='rm'>Romansh</option>
+                <option value='ro'>Romania</option>
+                <option value='ru'>Russian</option>
+                <option value='sk'>Slovak</option>
+                <option value='sl'>Slovene</option>
+                <option value='sq'>Albanian</option>
+                <option value='sv'>Swedish</option>
+                <option value='tr'>Turkish</option>
+                <option value='uk'>Ukrainian</option>
+                <option value='zh'>Chinese</option>
+            </select>
+        </div>
+
+                            </div>
+                            
+
+                        </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        </div>
+        </div>
+
+
+        <br>
+        <br>
+
+<script src="/javascript/map.js"></script>
+
+    </body>
