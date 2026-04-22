@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({mergeParams : true});
 const User = require("../Models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport=require("passport");
@@ -24,7 +24,7 @@ router.route("/signup")
       failureRedirect: "/login",
       failureFlash: true
    }),
-   userController.login
+   userController.login,
 );
 
 

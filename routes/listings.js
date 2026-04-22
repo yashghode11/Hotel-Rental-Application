@@ -4,7 +4,7 @@ const Listing = require("../Models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema} = require("../schema.js");
 const User = require("../Models/user.js");
-const {isLoggedIn}=require("../middleware.js");
+const {isLoggedIn, saveRedirectUrl}=require("../middleware.js");
 const {isOwner}=require("../middleware.js");
 const {validateListing}=require("../middleware.js");
 const ExpressError=require("../utils/ExpressError.js");
@@ -19,13 +19,13 @@ const upload = multer({ storage })
 
 router.route("/")
 // index route
-.get(
+.get(validateListing,
   wrapAsync(listingController.index),
 )
 //create route
-.post(
+.post(isLoggedIn,
 upload.single('listing[image][url]'),
-    validateListing,
+  validateListing,
   wrapAsync(listingController.createListing),
 )
 
@@ -59,7 +59,9 @@ router.route("/:id")
 // edit route
 
 router.get(
-  "/:id/edit",isLoggedIn,
+  "/:id/edit",
+  isLoggedIn,
+  isOwner,
   wrapAsync(listingController.renderEditForm),
 );
 

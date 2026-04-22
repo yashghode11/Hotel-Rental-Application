@@ -20,7 +20,7 @@ module.exports.showListing = async (req, res) => {
     .populate("owner"); 
   if (!list) {
     req.flash("error","no listing is present here");
-    return res.redirect("/listings");
+    res.redirect("/listings");
   }
   let token=process.env.MAP_TOKEN;
   let place=list.location;
@@ -51,7 +51,7 @@ module.exports.renderEditForm = async (req, res) => {
   const elist = await Listing.findById(id);
   if (!elist) {
     req.flash("error", "the Listing does not exists");
-    return res.redirect("/listings");
+     res.redirect("/listings");
   }
 
   res.render("listings/edit.ejs", { elist });
@@ -62,11 +62,11 @@ module.exports.updateListing = async (req, res) => {
   let listing = await Listing.findById(id);
   if(!listing){
    req.flash("error","Listing not found");
-   return res.redirect("/listings");
+   res.redirect("/listings");
 }
   if (!listing.owner._id.equals(res.locals.currUser._id)) {
     req.flash("error", "you do not have permission to edit");
-    return res.redirect("/listings/" + id);
+  res.redirect("/listings/" + id);
   }
   await Listing.findByIdAndUpdate(id, req.body.listing);
 
@@ -74,22 +74,22 @@ module.exports.updateListing = async (req, res) => {
   if (typeof req.file !== "undefined") {
     if(!req.file){
    req.flash("error","Image required");
-   return res.redirect("/listings/" + id + "/edit");
+   res.redirect("/listings/" + id + "/edit");
 }
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = { url, filename };
     await listing.save();
   }
-  req.flash("success", "you have succesfully updated the listing....");
- return  res.redirect("/listings/" + id);
+  req.flash("success", "you have successfully updated the listing....");
+ res.redirect("/listings/" + id);
 }
 
 module.exports.destroyListing = async (req, res) => {
   let { id } = req.params;
   const l = await Listing.findByIdAndDelete(id);
-  req.flash("success", "New listing Deleted successfully...");
-  return res.redirect("/listings");
+  req.flash("success", "listing Deleted successfully...");
+  res.redirect("/listings");
 }
 
 

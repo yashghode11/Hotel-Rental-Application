@@ -39,8 +39,8 @@ const atlas=process.env.ATLASDB_URL;
 const sec=process.env.SECRET;
 
 async function main(params) {
-
-  await mongoose.connect(atlas);
+mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+  // await mongoose.connect(atlas);
   
 
 }
